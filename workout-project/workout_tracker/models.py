@@ -92,9 +92,10 @@ class ExerciseImage(models.Model):
 
 
 class Workout(models.Model):
+    name = models.CharField(max_length=200, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="workouts")
     date = models.DateTimeField(auto_now_add=True)
-    legth = models.PositiveIntegerField(null=True, blank=True)
+    duration_seconds = models.PositiveIntegerField(null=True, blank=True)
     exercises = models.ManyToManyField(
         Exercise,
         through="WorkoutExercise",
@@ -105,7 +106,6 @@ class Workout(models.Model):
         return f"f{self.user.email} - {self.date.date()}"
 
 class WorkoutExercise(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="workout_exercises")
     workout = models.ForeignKey(Workout, on_delete=models.CASCADE, related_name="workout_exercises")
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE, related_name="workout_exercises")
     
@@ -120,7 +120,7 @@ class WorkoutExercise(models.Model):
         blank=True
     )
 
-class WorkoutSet(models.Model):
+class WorkoutExcerciseSet(models.Model):
     workout_exercise = models.ForeignKey(WorkoutExercise, on_delete=models.CASCADE, related_name="sets")
     reps = models.PositiveIntegerField(null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)
